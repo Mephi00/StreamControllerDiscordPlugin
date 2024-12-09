@@ -31,6 +31,7 @@ class MuteAction(DiscordActionBase):
             self.plugin_base.PATH, "assets", image), size=0.85)
 
     def on_tick(self):
+        super().on_tick()
         if self.muted:
             self.set_label("Muted", position=self.label_location.lower())
         else:
@@ -114,6 +115,8 @@ class MuteAction(DiscordActionBase):
         self.set_settings(settings)
 
     def on_key_down(self):
+        if not self.is_ready:
+            return
         match self.mode:
             case "Mute":
                 if not self.plugin_base.backend.set_mute(True):

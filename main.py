@@ -33,8 +33,11 @@ class PluginTemplate(PluginBase):
         self.launch_backend(backend_path=backend_path,
                             open_in_terminal=False, venv_path=os.path.join(self.PATH, '.venv'))
 
-        self.backend.update_client_credentials(
-            client_id, client_secret, access_token)
+        try:
+            self.backend.update_client_credentials(
+                client_id, client_secret, access_token)
+        except Exception as ex:
+            log.error("failed to start backend. {0}", ex)
 
         self.message_mute_action_holder = ActionHolder(
             plugin_base=self,
@@ -92,5 +95,6 @@ class PluginTemplate(PluginBase):
             callback(data)
 
     def on_auth_callback(self, success: bool, message: str = None):
+        self.backend.set_auth_success(success)
         if self.auth_callback_fn:
             self.auth_callback_fn(success, message)

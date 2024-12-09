@@ -14,8 +14,7 @@ class UnixPipe:
         self.socket: socket.socket = None
 
     def connect(self):
-        if self.socket is None:
-            self.socket = socket.socket(socket.AF_UNIX)
+        self.socket = socket.socket(socket.AF_UNIX)
         base_path = path = os.environ.get('XDG_RUNTIME_DIR') or os.environ.get(
             'TMPDIR') or os.environ.get('TMP') or os.environ.get('TEMP') or '/tmp'
         base_path = re.sub(r'\/$', '', path) + '/discord-ipc-{0}'

@@ -22,6 +22,7 @@ class ChangeTextChannel(DiscordActionBase):
         pass
 
     def on_tick(self):
+        super().on_tick()
         if self.channel_id:
             self.set_label(self.channel_id)
         else:
@@ -49,6 +50,8 @@ class ChangeTextChannel(DiscordActionBase):
         self.set_settings(settings)
 
     def on_key_down(self):
+        if not self.is_ready:
+            return
         settings = self.get_settings()
         channel_id = settings.get('channel_id')
         if not self.plugin_base.backend.change_text_channel(channel_id):

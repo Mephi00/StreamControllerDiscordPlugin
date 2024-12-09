@@ -24,6 +24,7 @@ class ChangeVoiceChannelAction(DiscordActionBase):
         pass
 
     def on_tick(self):
+        super().on_tick()
         if self.current_channel:
             self.set_label(self.current_channel)
         else:
@@ -51,6 +52,8 @@ class ChangeVoiceChannelAction(DiscordActionBase):
         self.set_settings(settings)
 
     def on_key_down(self):
+        if not self.is_ready:
+            return
         settings = self.get_settings()
         channel_id = settings.get('channel_id')
         self.plugin_base.backend.change_voice_channel(channel_id)
@@ -68,5 +71,7 @@ class ChangeVoiceChannelAction(DiscordActionBase):
             self.on_dial_down()
 
     def on_key_hold_start(self):
+        if not self.is_ready:
+            return
         if not self.plugin_base.backend.change_voice_channel(None):
             self.show_error(5)

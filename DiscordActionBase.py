@@ -14,6 +14,7 @@ class DiscordActionBase(ActionBase):
         super().__init__(*args, **kwargs)
         self.client_id: str = ""
         self.client_secret: str = ""
+        self.is_ready = False
 
     def get_config_rows(self) -> list:
         authed = self.plugin_base.backend.is_authed()
@@ -73,6 +74,14 @@ class DiscordActionBase(ActionBase):
 
     def on_change_client_secret(self, entry, _):
         self.update_settings("client_secret", entry.get_text())
+
+    def on_tick(self):
+        if not self.plugin_base.backend.is_authed():
+            self.is_ready = False
+            self.show_error()
+        else:
+            self.is_ready = True
+            self.hide_error()
 
     def on_auth_clicked(self, _):
         settings = self.plugin_base.get_settings()

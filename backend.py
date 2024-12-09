@@ -1,4 +1,5 @@
 import json
+import threading
 
 from streamcontroller_plugin_tools import BackendBase
 
@@ -62,10 +63,15 @@ class Backend(BackendBase):
         self.client_id = client_id
         self.client_secret = client_secret
         self.access_token = access_token
-        self.setup_client()
+        threading.Thread(target=self.setup_client, daemon=True,
+                         name="setup_client").start()
+        # self.setup_client()
 
     def is_authed(self) -> bool:
         return self._is_authed
+
+    def set_auth_success(self, success: bool) -> None:
+        self._is_authed = success
 
     def register_callback(self, key: str, callback: callable):
         callbacks = self.callbacks.get(key, [])

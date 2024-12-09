@@ -31,6 +31,7 @@ class DeafenAction(DiscordActionBase):
             self.plugin_base.PATH, "assets", image), size=0.85)
 
     def on_tick(self):
+        super().on_tick()
         if self.deafened:
             self.set_label("Deafened", position=self.label_location.lower())
         else:
@@ -96,6 +97,8 @@ class DeafenAction(DiscordActionBase):
         self.set_settings(settings)
 
     def on_key_down(self):
+        if not self.is_ready:
+            return
         match self.mode:
             case "Deafen":
                 if not self.plugin_base.backend.set_deafen(True):
